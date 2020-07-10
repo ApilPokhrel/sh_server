@@ -5,7 +5,7 @@ let init = async () => {
   let rPayload = {
     name: "super_admin",
     is_admin: true,
-    permissions: [],
+    permissions: [],d
     desc: "Super Admin can do anything"
   };
 
