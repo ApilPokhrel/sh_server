@@ -3,7 +3,7 @@ const schema = mongoose.Schema(
   {
     title: { type: String, trim: true, max: 50, required: true, unique: true },
     status: { type: String, enum: ["active", "inactive", "pending"], default: "active" },
-    file: { type: String, url: String, name: String },
+    file: { type: { type: String }, url: String, name: String },
     rank: { type: Number, default: 0 },
     desc: String
   },
