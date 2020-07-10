@@ -25,6 +25,7 @@ schema.statics.list = function (query, { start, limit }) {
         $facet: {
           data: [
             { $match: query },
+            { $sort: { createdAt: -1 } },
             {
               $skip: start
             },
@@ -32,7 +33,7 @@ schema.statics.list = function (query, { start, limit }) {
               $limit: limit
             }
           ],
-          summary: [{ $group: { _id: null, count: { $sum: 1 } } }]
+          summary: [{ $match: query }, { $group: { _id: null, count: { $sum: 1 } } }]
         }
       }
     ])

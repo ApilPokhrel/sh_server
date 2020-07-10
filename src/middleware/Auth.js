@@ -27,7 +27,6 @@ module.exports = (...perms) => {
         await redisClient.expire(key, process.env.REDIS_EXPIRE);
         user = user;
       }
-
       if (!user.is_verified) {
         res.status(403).send("Not Verified");
         return;

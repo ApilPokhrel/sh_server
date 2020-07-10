@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 const helmet = require("helmet");
 const compression = require("compression");
 const morgan = require("morgan");
-const errorHandler = require("../handler/error");
+const errorHandler = require("../handler/Error");
 const routes = require("./Routes");
 const cors = require("cors");
 

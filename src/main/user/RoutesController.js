@@ -84,7 +84,7 @@ exports.list = async (req, res) => {
 };
 
 exports.edit = async (req, res) => {
-  let { name, email, phone, roles, dob, email_verified, phone_verified } = req.body;
+  let { name, email, phone, roles, dob, email_verified, phone_verified, is_verified } = req.body;
   let payload = {};
   let contact = [];
   if (name) payload.name = await NameParser.parse(name);
@@ -93,6 +93,7 @@ exports.edit = async (req, res) => {
   if (email && phone) payload.contact = contact;
   if (dob) payload.dob = dob;
   if (roles && roles.length) payload.roles = roles;
+  if (is_verified) payload.is_verified = is_verified;
 
   let user = await User.findByIdAndUpdate(req.params.id, { $set: payload }, { new: true });
   res.json(user);

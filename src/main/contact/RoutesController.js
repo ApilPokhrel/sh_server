@@ -1,33 +1,42 @@
-const Tag = require("./Schema");
+const Contact = require("./Schema");
 const Joi = require("@hapi/joi");
 
 exports.create = async (req, res) => {
-  let tag = new Tag(req.body);
-  tag = await tag.save();
-  res.json(tag);
+  let contact = new Contact(req.body);
+  contact = await Contact.save();
+  res.json(contact);
 };
 
 exports.list = async (req, res) => {
-  let query = req.query.q || {};
+  let status = req.query.status;
   let limit = parseInt(req.query.limit) || 100;
   let start = parseInt(req.query.start) || 0;
-  let list = await Tag.list(query, { start, limit });
+  let query = {};
+  if (status) {
+    if (status == "active") {
+      query = { status: "active" };
+    }
+    if (status == "inactive") {
+      query = { status: "inactive" };
+    }
+  }
+  let list = await Contact.list(query, { start, limit });
   res.json(list);
 };
 
 exports.get = async (req, res) => {
-  let tag = await Tag.findById(req.params.id);
-  res.json(tag);
+  let contact = await Contact.findById(req.params.id);
+  res.json(contact);
 };
 
 exports.update = async (req, res) => {
-  let tag = await Tag.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true });
-  res.json(tag);
+  let contact = await Contact.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true });
+  res.json(contact);
 };
 
 exports.remove = async (req, res) => {
-  let tag = await Tag.findByIdAndRemove(req.params.id);
-  res.json(tag);
+  let contact = await Contact.findByIdAndRemove(req.params.id);
+  res.json(contact);
 };
 
 exports.validate = (req, res, next) => {
