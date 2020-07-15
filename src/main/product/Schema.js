@@ -18,14 +18,9 @@ const schema = mongoose.Schema(
       }
     ],
     price: Number, // unit price
+    price_unit: { type: String, default: "normal" },
+    currency: { type: String, enum: ["npr", "inr", "usd"] },
     discount: Number, //in percentage
-    prices: [
-      {
-        discount: Number /* in percentage */,
-        qty: String,
-        label: { type: String, lowercase: true, trim: true }
-      }
-    ],
 
     min: { type: Number, default: 1 },
     max: { type: Number, default: 100 },

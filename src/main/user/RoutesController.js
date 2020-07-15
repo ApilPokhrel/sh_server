@@ -4,6 +4,7 @@ const NameParser = require("../../util/NameParser");
 const Joi = require("@hapi/joi");
 const CC = require("../common/Controller");
 const C = require("./Controller");
+const mongoose = require("mongoose");
 
 exports.login = async (req, res) => {
   const { username, password } = req.body;
@@ -17,19 +18,45 @@ exports.login = async (req, res) => {
 
 exports.verifyCode = async (req, res) => {
   const { code } = req.body;
-  await C.verifyCode(code);
-  await C.updateRedis(req.user._id);
+  await C.verifyCode(code, req.user._id);
+  let email = req.user.contact.filter(e => e.type === "email");
   let user = await User.findOneAndUpdate(
-    { _id: req.user_id, "contact.address": "email" },
+    { _id: req.user._id, "contact.address": email[0].address },
     { $set: { "contact.$.is_verified": true, is_verified: true } },
     { new: true }
   );
+  await C.updateRedis(req.user._id);
+
   res.json(user);
 };
 
 exports.sendCode = async (req, res) => {
-  const code = await C.generateCode(req.user._id);
-  res.json(code);
+  let user = req.user;
+  let email = user.contact.filter(e => e.type === "email");
+  C.sendMail({ to: email[0].address, user_id: user._id });
+  res.json(true);
+};
+
+exports.sendCodeUnverified = async (req, res) => {
+  let { email } = req.body;
+  let user = await User.findOne({ "contact.address": email });
+  if (user) {
+    C.sendMail({ to: email, user_id: "random" });
+  }
+  res.json(user);
+};
+
+exports.resetPass = async (req, res) => {
+  const { code, password, email } = req.body;
+  let user_id = "random";
+  await C.verifyCode(code, user_id);
+  let hash = await C.generateHash(password);
+  let user = await User.findOneAndUpdate(
+    { "contact.address": email },
+    { $set: { password: hash } },
+    { new: true }
+  );
+  res.json(user);
 };
 
 exports.register = async (req, res) => {
@@ -93,7 +120,7 @@ exports.edit = async (req, res) => {
   if (email && phone) payload.contact = contact;
   if (dob) payload.dob = dob;
   if (roles && roles.length) payload.roles = roles;
-  if (is_verified) payload.is_verified = is_verified;
+  if (is_verified !== undefined || is_verified !== null) payload.is_verified = is_verified;
 
   let user = await User.findByIdAndUpdate(req.params.id, { $set: payload }, { new: true });
   res.json(user);

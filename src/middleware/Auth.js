@@ -4,6 +4,7 @@ const Role = require("../main/auth/RoleSchema");
 
 module.exports = (...perms) => {
   return async function (req, res, next) {
+    let allow = ["/api/v1/user/code"];
     try {
       let { token } = req.headers || req.body || req.query;
       let user = null;
@@ -27,10 +28,11 @@ module.exports = (...perms) => {
         await redisClient.expire(key, process.env.REDIS_EXPIRE);
         user = user;
       }
-      if (!user.is_verified) {
-        res.status(403).send("Not Verified");
-        return;
-      }
+      if (allow.indexOf(req.baseUrl + req.path) < 0)
+        if (!user.is_verified) {
+          res.status(403).send("Not Verified");
+          return;
+        }
 
       if (!user.is_admin) {
         if (perms && perms.length) {

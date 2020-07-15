@@ -1,21 +1,24 @@
 "use strict";
 const nodemailer = require("nodemailer");
 const ejs = require("ejs");
+const path = require("path");
 
 let transporter = nodemailer.createTransport({
-  service: process.env.MAIL_SERVICE,
+  service: "sparkpost",
   auth: {
-    user: process.env.MAIL_AUTH_USER,
-    pass: process.env.MAIL_AUTH_PASSWORD
+    user: "SMTP_Injection",
+    pass: "37d02f2f3f745d8dd4e6dd89582e446a6833f310"
   }
 });
 
 exports.TEMPLATES = {
-  SIGNUP_CREDENTIALS: {
-    from: process.env.MAIL_FROM,
-    subject: "Verify your email Now!",
-    html: "../../public/mail/verify_code.ejs",
-    logo: process.env.HOST + "/logo.png"
+  SIGNUP_CREDENTIALS: () => {
+    return {
+      from: '"Shsteels" <mail@shsteels.com>',
+      subject: "Verify your email Now!",
+      html: path.join(__dirname, "../../public/mail/verify_code.ejs"),
+      logo: process.env.HOST + "/logo.png"
+    };
   }
 };
 
@@ -31,6 +34,7 @@ exports.sendMail = (to, data, template) => {
     let mailOptions = {
       from: template.from,
       to: to,
+      text: "New Request", // plain text body
       subject: template.subject,
       html: html
     };

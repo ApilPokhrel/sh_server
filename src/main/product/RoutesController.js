@@ -125,7 +125,7 @@ exports.validate = async (req, res, next) => {
     desc: Joi.string().required().label("must supply Description!"),
     min: Joi.number().required().label("must supply min!"),
     price: Joi.number().required().label("must supply price!"),
-    priceUnit: Joi.string().required().label("must supply  price unit eg(USD, NPL, INR)!"), //US, NRS, INR
+    price_unit: Joi.string().required().label("must supply  price unit eg(USD, NPL, INR)!"), //US, NRS, INR
     is_available: Joi.boolean().required().label("must supply  product available or not!")
   });
 

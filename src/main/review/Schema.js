@@ -21,7 +21,7 @@ const schema = mongoose.Schema(
       min: 1,
       max: 5
     },
-    status: { type: String, default: "active", enum: ["active", "inactive"] }
+    status: { type: String, enum: ["active", "inactive"] }
   },
   {
     timestamps: true
