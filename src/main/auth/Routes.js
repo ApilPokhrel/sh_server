@@ -9,11 +9,11 @@ router.post("/access", e.catchErrors(c.access));
 
 router.get("/:entity/search", auth(), e.catchErrors(c.search));
 
-router.get("/role", auth(), e.catchErrors(c.role.list));
-router.post("/role", auth(), e.catchErrors(c.role.create));
-router.get("/role/:id", auth(), e.catchErrors(c.role.get));
-router.patch("/role/:id", e.catchErrors(c.role.update));
-router.delete("/role/:id", auth(), e.catchErrors(c.role.delete));
-router.post("/role/:name/permissions", auth(), e.catchErrors(c.role.removePerms));
+router.get("/role", auth("super_admin"), e.catchErrors(c.role.list));
+router.post("/role", auth("super_admin"), e.catchErrors(c.role.create));
+router.get("/role/:id", auth("super_admin"), e.catchErrors(c.role.get));
+router.patch("/role/:id", auth("super_admin"), e.catchErrors(c.role.update));
+router.delete("/role/:id", auth("super_admin"), e.catchErrors(c.role.delete));
+router.post("/role/:name/permissions", auth("super_admin"), e.catchErrors(c.role.removePerms));
 
 module.exports = router;
