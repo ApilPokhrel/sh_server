@@ -82,7 +82,7 @@ schema.statics.list = function (q, { start, limit }) {
         $facet: {
           data: [
             { $match: q },
-            { $sort: { createdAt: -1 } },
+            { $sort: { createdAt: 1 } },
             { $skip: start },
             { $limit: limit },
             {
