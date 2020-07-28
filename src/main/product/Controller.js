@@ -28,7 +28,7 @@ let parseFilter = ({ sort, price, color, tags }) => {
         break;
     }
   } else {
-    sorts.push({ $sort: { "document.createdAt": -1 } });
+    sorts.push({ $sort: { "document.createdAt": 1 } });
   }
 
   if (price) {
