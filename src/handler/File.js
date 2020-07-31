@@ -30,32 +30,41 @@ exports.uploadToS3 = (fileName, buffer, type) => {
     var sizes = [
       {
         path: "extra_large",
-        xy: 1024
+        x: 1024,
+        y: 1024,
+        quality: 80
       },
       {
         path: "large",
-        xy: 800
+        x: 800,
+        y: 800,
+        quality: 80
       },
       {
         path: "510x340",
         x: 510,
-        y: 340
+        y: 340,
+        quality: 90
       },
       {
         path: "medium",
-        xy: 300
+        x: 300,
+        y: 300,
+        quality: 90
       },
       {
         path: "small",
-        xy: 100
+        x: 100,
+        y: 100,
+        quality: 100
       }
     ];
 
     for (let s of sizes) {
       sharp(buffer)
-        .resize(s.xy, s.xy)
+        .resize(s.x, s.y)
         .toFormat("jpeg")
-        .jpeg({ quality: 100 })
+        .jpeg({ quality: s.quality })
         .toBuffer()
         .then(data => {
           let newName = `${fileName}_${s.path}.jpg`;
@@ -63,7 +72,8 @@ exports.uploadToS3 = (fileName, buffer, type) => {
             Bucket: "commerceup",
             Key: newName,
             Body: data,
-            ACL: "public-read"
+            ACL: "public-read",
+            ContentType: "image/jpeg"
           };
 
           s3.upload(params, function (err, data) {
