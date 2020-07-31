@@ -30,9 +30,9 @@ exports.uploadToS3 = (fileName, buffer, type) => {
     var sizes = [
       {
         path: "large",
-        x: 1300,
+        x: 1360,
         y: 510,
-        quality: 70
+        quality: 80
       },
       {
         path: "510x340",
