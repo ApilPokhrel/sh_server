@@ -36,8 +36,8 @@ exports.uploadToS3 = (fileName, buffer, type) => {
       },
       {
         path: "510x340",
-        x: 510,
-        y: 340,
+        x: 800,
+        y: 800,
         quality: 90
       },
       {
